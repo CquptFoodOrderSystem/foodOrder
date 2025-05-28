@@ -48,5 +48,5 @@ type AddReq struct {
 	// 蛋白质
 	Protein int64 `form:"protein" validate:"required"`
 	// 窗口id
-	WindowID int64 `form:"windowID" validate:"required"`
+	WindowID int64 `form:"windowId" validate:"required"`
 }

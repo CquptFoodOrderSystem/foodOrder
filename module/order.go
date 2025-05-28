@@ -20,7 +20,7 @@ type Subtotal struct {
 }
 
 // 订单详细表
-type OrderDetail struct {
+type OrderDetails struct {
 	gorm.Model
 	OrderID   string  `gorm:"size:50;not null;index" json:"order_id"`
 	DishID    int64   `gorm:"not null" json:"dish_id"`
@@ -31,7 +31,7 @@ type OrderDetail struct {
 }
 
 type AddOrderReq struct {
-	OrderDetailsID []string `form:"orderDetailsID" validate:"required"`
-	OrderTime      string   `form:"orderTime"`
-	UserID         string   `form:"userID" validate:"required"`
+	OrderDetailsID []string `form:"order_details_id" validate:"required"`
+	OrderTime      string   `form:"order_time"`
+	UserID         string   `form:"user_id" validate:"required"`
 }

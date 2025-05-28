@@ -20,7 +20,7 @@ func MysqlInit() {
 		&module.User{},
 		&module.Dish{},
 		&module.DishRecommendation{},
-		&module.OrderDetail{},
+		&module.OrderDetails{},
 		&module.Order{},
 		&module.QueueStatus{},
 		&module.Subtotal{},

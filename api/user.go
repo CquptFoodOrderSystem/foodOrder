@@ -27,7 +27,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 		utils.FailResp(ctx, c, "请输入两次相同密码")
 		return
 	}
-	if err = dao.DB.Where("username = ?", req.UserName).Find(&usr).Error; !errors.Is(err, gorm.ErrRecordNotFound) {
+	if err = dao.DB.Where("username = ?", req.UserName).First(&usr).Error; !errors.Is(err, gorm.ErrRecordNotFound) {
 		utils.FailResp(ctx, c, "该用户名已注册："+err.Error())
 		return
 	}
@@ -48,7 +48,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 		utils.FailResp(ctx, c, "数据库操作错误："+err.Error())
 		return
 	}
-	token, err := utils.GenerateJwt(JwtKey, jwt.SigningMethodHS256, jwt.MapClaims{
+	token, err := utils.GenerateJwt([]byte(JwtKey), jwt.SigningMethodHS256, jwt.MapClaims{
 		"iss":  usr.ID,
 		"name": usr.Username,
 	})
@@ -79,7 +79,7 @@ func Login(ctx context.Context, c *app.RequestContext) {
 		utils.FailResp(ctx, c, "密码错误："+err.Error())
 		return
 	}
-	token, err := utils.GenerateJwt(JwtKey, jwt.SigningMethodHS256, jwt.MapClaims{
+	token, err := utils.GenerateJwt([]byte(JwtKey), jwt.SigningMethodHS256, jwt.MapClaims{
 		"iss":  usr.ID,
 		"name": usr.Username,
 	})
