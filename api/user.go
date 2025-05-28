@@ -9,10 +9,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/golang-jwt/jwt/v5"
 	"gorm.io/gorm"
-)
-
-const (
-	JwtKey = "123"
+	"os"
 )
 
 func Register(ctx context.Context, c *app.RequestContext) {
@@ -48,7 +45,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 		utils.FailResp(ctx, c, "数据库操作错误："+err.Error())
 		return
 	}
-	token, err := utils.GenerateJwt([]byte(JwtKey), jwt.SigningMethodHS256, jwt.MapClaims{
+	token, err := utils.GenerateJwt([]byte(os.Getenv("JWT_KEY")), jwt.SigningMethodHS256, jwt.MapClaims{
 		"iss":  usr.ID,
 		"name": usr.Username,
 	})
@@ -79,7 +76,7 @@ func Login(ctx context.Context, c *app.RequestContext) {
 		utils.FailResp(ctx, c, "密码错误："+err.Error())
 		return
 	}
-	token, err := utils.GenerateJwt([]byte(JwtKey), jwt.SigningMethodHS256, jwt.MapClaims{
+	token, err := utils.GenerateJwt([]byte(os.Getenv("JWT_KEY")), jwt.SigningMethodHS256, jwt.MapClaims{
 		"iss":  usr.ID,
 		"name": usr.Username,
 	})

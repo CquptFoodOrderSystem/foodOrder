@@ -10,7 +10,7 @@ func GenerateJwt(key any, method jwt.SigningMethod, claims jwt.Claims) (string, 
 	return token.SignedString(key)
 }
 
-func ParseJwtWithClaims(key any, jwtStr string, options ...jwt.ParserOption) (jwt.Claims, error) {
+func ParseJwtWithClaim(key any, jwtStr string, options ...jwt.ParserOption) (jwt.Claims, error) {
 	mc := jwt.MapClaims{}
 	token, err := jwt.ParseWithClaims(jwtStr, mc, func(token *jwt.Token) (interface{}, error) {
 		return key, nil

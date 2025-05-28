@@ -1,5 +1,28 @@
 package middleware
 
+import (
+	"context"
+	_utils "github.com/CquptFoodOrderSystem/foodOrder/utils"
+	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/utils"
+	"os"
+)
+
+func AuthMiddleware() app.HandlerFunc {
+	return func(c context.Context, ctx *app.RequestContext) {
+		token := ctx.GetHeader("Authorization")
+		_, err := _utils.ParseJwtWithClaim(os.Getenv("JWT_KEY"), string(token))
+		if token == nil || err != nil {
+			ctx.JSON(401, utils.H{
+				"msg": "未授权或Token无效",
+			})
+			ctx.Abort() // 阻止后续处理
+			return
+		}
+		ctx.Next(c)
+	}
+}
+
 //
 //import (
 //	"errors"

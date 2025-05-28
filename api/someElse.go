@@ -118,73 +118,6 @@ func Charge(ctx context.Context, c *app.RequestContext) {
 
 var upgrader = websocket.HertzUpgrader{} // 使用默认配置
 
-//func Message(ctx context.Context, c *app.RequestContext) {
-//	id := c.Query("id")
-//	err := upgrader.Upgrade(c, func(conn *websocket.Conn) {
-//		Kaf := utils.KafkaInit()
-//
-//		// 启动 Kafka 消息监听
-//		msgCh := make(chan utils.Message)
-//		defer close(msgCh)
-//
-//		// 启动 Kafka 消息处理协程
-//		go func() {
-//			defer conn.Close()
-//
-//			for {
-//				select {
-//				case <-ctx.Done():
-//					log.Println("主上下文取消，关闭 Kafka 连接")
-//					Kaf.Close()
-//					return
-//				case msg := <-msgCh:
-//					if msg.Receiver == id {
-//						err := conn.WriteMessage(websocket.TextMessage, []byte("185清纯帅气男大商家发来通知："+msg.Content))
-//						if err != nil {
-//							log.Println("发送信息失败：", err)
-//							return
-//						}
-//					}
-//				}
-//			}
-//		}()
-//
-//		// Kafka 消息读取
-//		go func() {
-//			defer Kaf.Close()
-//			if err := Kaf.Reader(ctx, msgCh); err != nil {
-//				log.Println("读取 Kafka 消息失败：", err)
-//			}
-//		}()
-//
-//		// 处理 WebSocket 消息
-//		for {
-//			mt, message, err := conn.ReadMessage()
-//			if err != nil {
-//				log.Println("WebSocket 读取失败：", err)
-//				return
-//			}
-//			switch mt {
-//			case websocket.TextMessage: //文本信息为 orderId
-//				var order module.Order
-//				err := dao.DB.Where("id = ?", string(message)).First(&order).Error
-//				if err != nil {
-//					log.Println("查询 order 失败：", err)
-//					return
-//				}
-//				Kaf.Writer("sender", strconv.Itoa(int(order.ID)), id)
-//			case websocket.CloseMessage:
-//				log.Println("客户端请求关闭连接")
-//				return
-//			}
-//		}
-//	})
-//	if err != nil {
-//		log.Println("连接升级失败：", err)
-//		return
-//	}
-//}
-
 func Message(ctx context.Context, c *app.RequestContext) {
 	id := c.Query("id")
 	err := upgrader.Upgrade(c, func(conn *websocket.Conn) {
@@ -262,20 +195,3 @@ func Message(ctx context.Context, c *app.RequestContext) {
 		log.Println("升级失败：", err)
 	}
 }
-
-//go func() {
-//	ticker := time.NewTicker(5 * time.Second) // 每5秒发送一次
-//	defer ticker.Stop()
-//
-//	for {
-//		select {
-//		case <-ticker.C:
-//			// 主动发送消息
-//			msg := fmt.Sprintf("服务端主动推送: %v", time.Now())
-//			if err := conn.WriteMessage(websocket.TextMessage, []byte(msg)); err != nil {
-//				log.Println("主动发送失败:", err)
-//				return
-//			}
-//		}
-//	}
-//}()
